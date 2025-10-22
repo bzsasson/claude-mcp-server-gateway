@@ -1,0 +1,29 @@
+{
+  "servers": {
+    "memory-extension-pro": {
+      "command": "/path/to/your/venv/bin/python",
+      "args": ["/path/to/your/mcp_memory_server_hybrid.py"],
+      "env": {
+        "GEMINI_API_KEY": ""
+      },
+      "description": "Advanced memory storage with permanent files, temporary content, semantic search"
+    },
+    "google-search-console": {
+      "command": "node",
+      "args": ["/path/to/your/gsc-oauth-mcp/build/index.js"],
+      "env": {
+        "GOOGLE_CLIENT_ID": "",
+        "GOOGLE_CLIENT_SECRET": ""
+      },
+      "description": "Google Search Console data: search analytics, URL inspection, sitemaps"
+    },
+    "google-workspace": {
+      "command": "/path/to/your/.venv/bin/python",
+      "args": ["/path/to/your/google_workspace_mcp/main.py"],
+      "env": {
+        "OAUTHLIB_INSECURE_TRANSPORT": "1"
+      },
+      "description": "Google Workspace: Gmail, Drive, Calendar, Docs, Sheets, Tasks, Chat"
+    }
+  }
+}

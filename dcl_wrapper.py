@@ -13,6 +13,8 @@ This dramatically reduces token consumption by only loading tools when needed.
 Based on official MCP Python SDK patterns from Context7 documentation (2025).
 """
 
+__version__ = "1.1.0"
+
 import asyncio
 import json
 import os
@@ -31,13 +33,125 @@ load_dotenv()
 # Create the master MCP server
 mcp = FastMCP("DCL Master MCP")
 
-# Check for required environment variables at startup
-REQUIRED_ENV_VARS = {
-    "memory-extension-pro": ["GEMINI_API_KEY"],
-    "google-search-console": ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"],
-    "actors-mcp-server": ["APIFY_TOKEN"],
-    "dataforseo": ["DATAFORSEO_USERNAME", "DATAFORSEO_PASSWORD"]
+# Default MCP servers (NPX-based, work universally - no local paths needed)
+DEFAULT_MCP_SERVERS = {
+    "context7": {
+        "command": "npx",
+        "args": ["-y", "@upstash/context7-mcp"],
+        "env": {},
+        "description": "Context7 for checking current code documentation"
+    },
+    "google-analytics": {
+        "command": "npx",
+        "args": ["-y", "supergateway", "--sse", 
+                 "https://mcp.pipedream.net/9148c057-4cf8-4b35-ac39-b596ce6f68bc/google_analytics"],
+        "env": {},
+        "description": "Google Analytics reporting and metrics"
+    },
+    "actors-mcp-server": {
+        "command": "npx",
+        "args": ["-y", "@apify/actors-mcp-server"],
+        "env": {
+            "APIFY_TOKEN": os.getenv("APIFY_TOKEN", "")
+        },
+        "description": "Apify Actor platform: web scraping, automation, data extraction"
+    },
+    "github": {
+        "command": "npx",
+        "args": ["-y", "@modelcontextprotocol/server-github"],
+        "env": {
+            "GITHUB_PERSONAL_ACCESS_TOKEN": os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN", "")
+        },
+        "description": "GitHub: repositories, issues, PRs, code search, CI/CD workflows, security"
+    },
+    "dataforseo": {
+        "command": "npx",
+        "args": ["-y", "dataforseo-mcp-server", "local", "--debug"],
+        "env": {
+            "DATAFORSEO_USERNAME": os.getenv("DATAFORSEO_USERNAME", ""),
+            "DATAFORSEO_PASSWORD": os.getenv("DATAFORSEO_PASSWORD", "")
+        },
+        "description": "DataForSEO: SERP data, keywords, backlinks, domain analytics, content analysis"
+    }
 }
+
+
+def load_config_file() -> Dict[str, Any]:
+    """
+    Load additional MCP servers from mcp_config.json if it exists.
+    This file is git-ignored and contains user-specific paths.
+    """
+    config_path = os.path.join(os.path.dirname(__file__), 'mcp_config.json')
+    
+    if os.path.exists(config_path):
+        try:
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+                servers = config.get('servers', {})
+                
+                # Process environment variables in the config
+                for server_name, server_config in servers.items():
+                    if 'env' in server_config:
+                        # Replace empty strings with actual env vars
+                        for env_key, env_val in server_config['env'].items():
+                            if env_val == "":
+                                server_config['env'][env_key] = os.getenv(env_key, "")
+                
+                if servers:
+                    print(f"✅ Loaded {len(servers)} custom MCP server(s) from mcp_config.json", 
+                          file=sys.stderr)
+                return servers
+        except json.JSONDecodeError as e:
+            print(f"⚠️  Warning: Could not parse mcp_config.json: {e}", file=sys.stderr)
+            print(f"   Using only default MCP servers.", file=sys.stderr)
+        except Exception as e:
+            print(f"⚠️  Warning: Error loading mcp_config.json: {e}", file=sys.stderr)
+            print(f"   Using only default MCP servers.", file=sys.stderr)
+    else:
+        print(f"ℹ️  No mcp_config.json found. Using only default MCP servers.", file=sys.stderr)
+        print(f"   Copy mcp_config.example.json to mcp_config.json to add custom servers.", 
+              file=sys.stderr)
+    
+    return {}
+
+
+# Combine default and custom servers
+MCP_SERVERS = {**DEFAULT_MCP_SERVERS, **load_config_file()}
+
+# Check for required environment variables at startup
+# Default requirements for built-in servers
+REQUIRED_ENV_VARS = {
+    "actors-mcp-server": ["APIFY_TOKEN"],
+    "dataforseo": ["DATAFORSEO_USERNAME", "DATAFORSEO_PASSWORD"],
+    "github": ["GITHUB_PERSONAL_ACCESS_TOKEN"]
+}
+
+
+def get_required_env_vars_from_config() -> Dict[str, list]:
+    """Extract required env vars from custom config."""
+    config_path = os.path.join(os.path.dirname(__file__), 'mcp_config.json')
+    if os.path.exists(config_path):
+        try:
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+                servers = config.get('servers', {})
+                
+                custom_reqs = {}
+                for server_name, server_config in servers.items():
+                    env_vars = server_config.get('env', {})
+                    # Get keys that need to be set (those with empty string values)
+                    required = [k for k, v in env_vars.items() if v == ""]
+                    if required:
+                        custom_reqs[server_name] = required
+                return custom_reqs
+        except:
+            pass
+    return {}
+
+
+# Update with custom server requirements
+REQUIRED_ENV_VARS.update(get_required_env_vars_from_config())
+
 
 # Warning message for missing env vars (non-fatal)
 def check_env_vars():
@@ -57,126 +171,19 @@ def check_env_vars():
         print("   These MCPs may not work without the required environment variables.", file=sys.stderr)
         print("", file=sys.stderr)
 
+
 # Check env vars on startup
 check_env_vars()
 
-# Configuration: Your existing MCP servers
-# 
-# IMPORTANT: Customize the paths below to match your installation!
-# 
-# NPX-based servers (like "context7", "actors-mcp-server") work universally
-# Local path servers (like "memory-extension-pro", "google-workspace") need your paths
-# 
-# To customize:
-# 1. Update command paths to match your system
-# 2. Update args to point to your script locations  
-# 3. Add/remove servers as needed
-# 4. Set required environment variables in .env file
-#
-MCP_SERVERS = {
-    # Universal NPX-based server (works for everyone)
-    "context7": {
-        "command": "npx",
-        "args": [
-            "-y",
-            "@upstash/context7-mcp"
-        ],
-        "env": {},
-        "description": "Context7 for checking current code documentation"
-    },
-    # LOCAL PATH EXAMPLE - Customize these paths to your installation!
-    # Replace /Users/boazsasson/Roo/... with your actual paths
-    "memory-extension-pro": {
-        "command": "/Users/boazsasson/Roo/claude-memory-extension-mcp/venv/bin/python",
-        "args": [
-            "/Users/boazsasson/Roo/claude-memory-extension-mcp/mcp_memory_server_hybrid.py"
-        ],
-        "env": {
-            # No default - must be set as environment variable
-            "GEMINI_API_KEY": os.getenv("GEMINI_API_KEY", "")
-        },
-        "description": "Advanced memory storage with permanent files, temporary content, semantic search"
-    },
-    "google-analytics": {
-        "command": "npx",
-        "args": [
-            "-y",
-            "supergateway",
-            "--sse",
-            "https://mcp.pipedream.net/9148c057-4cf8-4b35-ac39-b596ce6f68bc/google_analytics"
-        ],
-        "env": {},
-        "description": "Google Analytics reporting and metrics"
-    },
-    # LOCAL PATH EXAMPLE - Customize to your installation!
-    "google-search-console": {
-        "command": "node",
-        "args": [
-            "/Users/boazsasson/Roo/mcp-servers/gsc-oauth-mcp/build/index.js"
-        ],
-        "env": {
-            # No defaults - must be set as environment variables
-            "GOOGLE_CLIENT_ID": os.getenv("GOOGLE_CLIENT_ID", ""),
-            "GOOGLE_CLIENT_SECRET": os.getenv("GOOGLE_CLIENT_SECRET", "")
-        },
-        "description": "Google Search Console data: search analytics, URL inspection, sitemaps"
-    },
-    "actors-mcp-server": {
-        "command": "npx",
-        "args": [
-            "-y",
-            "@apify/actors-mcp-server"
-        ],
-        "env": {
-            # No default - must be set as environment variable
-            "APIFY_TOKEN": os.getenv("APIFY_TOKEN", "")
-        },
-        "description": "Apify Actor platform: web scraping, automation, data extraction"
-    },
-    # LOCAL PATH EXAMPLE - Customize to your installation!
-    "google-workspace": {
-        "command": "/Users/boazsasson/Roo/mcp-servers/google_workspace_mcp/.venv/bin/python",
-        "args": [
-            "/Users/boazsasson/Roo/mcp-servers/google_workspace_mcp/main.py"
-        ],
-        "env": {
-            "OAUTHLIB_INSECURE_TRANSPORT": "1"
-        },
-        "description": "Google Workspace: Gmail, Drive, Calendar, Docs, Sheets, Tasks, Chat"
-    },
-    # Universal NPX-based server (works for everyone)
-    "github": {
-        "command": "npx",
-        "args": ["-y", "@modelcontextprotocol/server-github"],
-        "env": {
-            "GITHUB_PERSONAL_ACCESS_TOKEN": os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN", "")
-        },
-        "description": "GitHub: repositories, issues, PRs, code search, CI/CD workflows, security"
-    },
-    "dataforseo": {
-        "command": "npx",
-        "args": [
-            "-y",
-            "dataforseo-mcp-server",
-            "local",
-            "--debug"
-        ],
-        "env": {
-            # No defaults - must be set as environment variables
-            "DATAFORSEO_USERNAME": os.getenv("DATAFORSEO_USERNAME", ""),
-            "DATAFORSEO_PASSWORD": os.getenv("DATAFORSEO_PASSWORD", "")
-        },
-        "description": "DataForSEO: SERP data, keywords, backlinks, domain analytics, content analysis"
-    }
-}
+# Timeout for MCP operations (configurable via environment variables)
+MCP_TIMEOUT = int(os.getenv("DCL_OPERATION_TIMEOUT", "300"))  # Default: 5 minutes
+MCP_INIT_TIMEOUT = int(os.getenv("DCL_INIT_TIMEOUT", "30"))  # Default: 30 seconds
 
-# Timeout for MCP operations (in seconds)
-MCP_TIMEOUT = 300  # 5 minutes
-MCP_INIT_TIMEOUT = 30  # 30 seconds for initialization
 
-# Optional: Make timeouts configurable via environment
-MCP_TIMEOUT = int(os.getenv("DCL_OPERATION_TIMEOUT", "300"))
-MCP_INIT_TIMEOUT = int(os.getenv("DCL_INIT_TIMEOUT", "30"))
+@mcp.tool()
+def get_version() -> str:
+    """Get DCL Wrapper version information."""
+    return f"DCL Wrapper v{__version__}"
 
 
 @mcp.tool()
@@ -262,7 +269,7 @@ async def load_mcp_tools(mcp_name: str) -> str:
     
     except asyncio.TimeoutError:
         return f"[ERROR] Timeout connecting to {mcp_name} (exceeded {MCP_INIT_TIMEOUT}s for init or {MCP_TIMEOUT}s for operation)"
-    except Exception as e:
+    except BaseException as e:  # Catches Exception, ExceptionGroup, and other exceptions
         error_msg = f"[ERROR] Error connecting to {mcp_name}: {str(e)}\n\n"
         error_msg += "Stack trace:\n"
         error_msg += traceback.format_exc()
@@ -329,7 +336,7 @@ async def call_mcp_tool(
                     if hasattr(content, 'text'):
                         output.append(content.text)
                 
-                # Handle structured content (2025-06-18 spec)
+                # Handle structured content (MCP spec)
                 # Use hasattr to safely check for structuredContent attribute
                 if hasattr(result, 'structuredContent') and result.structuredContent:
                     output.append(f"\nStructured content: {json.dumps(result.structuredContent, indent=2)}")
@@ -341,7 +348,7 @@ async def call_mcp_tool(
     
     except asyncio.TimeoutError:
         return f"[ERROR] Tool {tool_name} on {mcp_name} timed out (exceeded {MCP_INIT_TIMEOUT}s for init or {MCP_TIMEOUT}s for operation)"
-    except Exception as e:
+    except BaseException as e:  # Catches Exception, ExceptionGroup, and other exceptions
         error_msg = f"[ERROR] Error calling {tool_name} on {mcp_name}: {str(e)}\n\n"
         error_msg += "Stack trace:\n"
         error_msg += traceback.format_exc()

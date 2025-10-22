@@ -44,6 +44,9 @@ venv.bak/
 .env
 *.env
 
+# Local MCP configuration (IMPORTANT - contains personal paths)
+mcp_config.json
+
 # Logs
 *.log
 
