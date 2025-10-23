@@ -159,7 +159,7 @@ Replace your entire `mcpServers` section with just the gateway:
   "mcpServers": {
     "claude-mcp-server-gateway": {
       "command": "/path/to/your/.venv/bin/python",
-      "args": ["/path/to/claude-mcp-server-gateway/gateway.py"],
+      "args": ["/path/to/claude-mcp-server-gateway/dcl_wrapper.py"],
       "env": {}
     }
   }
@@ -211,7 +211,7 @@ call_mcp_tool(mcp_name="github", tool_name="search_repositories", arguments={...
 
 ### Adding New MCP Servers to the Gateway
 
-Extend the gateway with any MCP server by adding to `gateway.py`:
+Extend the gateway with any MCP server by adding to `dcl_wrapper.py`:
 
 ```python
 MCP_SERVERS = {
