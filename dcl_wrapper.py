@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-DCL (Dynamic Context Loading) Wrapper for MCP Servers
+Claude MCP Server Gateway - Dynamic Gateway for Model Context Protocol Servers
 A master MCP server that manages all your other MCP servers dynamically.
 
-Instead of loading all tools from all MCPs upfront, this wrapper:
+Instead of loading all tools from all MCPs upfront, this gateway:
 1. Exposes brief summaries of available MCP servers  
 2. Provides a single "load_mcp_tools" tool to load specific MCP tools on-demand
 3. Dynamically connects to and disconnects from MCP servers as needed
@@ -13,7 +13,7 @@ This dramatically reduces token consumption by only loading tools when needed.
 Based on official MCP Python SDK patterns from Context7 documentation (2025).
 """
 
-__version__ = "1.1.0"
+__version__ = "2.0.0"
 
 import asyncio
 import json
@@ -30,8 +30,8 @@ from mcp.server.fastmcp import FastMCP
 from dotenv import load_dotenv
 load_dotenv()
 
-# Create the master MCP server
-mcp = FastMCP("DCL Master MCP")
+# Create the master MCP gateway server
+mcp = FastMCP("Claude MCP Server Gateway")
 
 # Default MCP servers (NPX-based, work universally - no local paths needed)
 DEFAULT_MCP_SERVERS = {
@@ -176,14 +176,14 @@ def check_env_vars():
 check_env_vars()
 
 # Timeout for MCP operations (configurable via environment variables)
-MCP_TIMEOUT = int(os.getenv("DCL_OPERATION_TIMEOUT", "300"))  # Default: 5 minutes
-MCP_INIT_TIMEOUT = int(os.getenv("DCL_INIT_TIMEOUT", "30"))  # Default: 30 seconds
+MCP_TIMEOUT = int(os.getenv("GATEWAY_OPERATION_TIMEOUT", "300"))  # Default: 5 minutes
+MCP_INIT_TIMEOUT = int(os.getenv("GATEWAY_INIT_TIMEOUT", "30"))  # Default: 30 seconds
 
 
 @mcp.tool()
 def get_version() -> str:
-    """Get DCL Wrapper version information."""
-    return f"DCL Wrapper v{__version__}"
+    """Get Claude MCP Server Gateway version information."""
+    return f"Claude MCP Server Gateway v{__version__}"
 
 
 @mcp.tool()
@@ -228,7 +228,7 @@ async def load_mcp_tools(mcp_name: str) -> str:
     if mcp_name in REQUIRED_ENV_VARS:
         missing = [var for var in REQUIRED_ENV_VARS[mcp_name] if not os.getenv(var)]
         if missing:
-            return f"[ERROR] Cannot load {mcp_name}: Missing required environment variables: {', '.join(missing)}\n\nPlease set these environment variables and restart the DCL wrapper."
+            return f"[ERROR] Cannot load {mcp_name}: Missing required environment variables: {', '.join(missing)}\n\nPlease set these environment variables and restart the gateway."
     
     config = MCP_SERVERS[mcp_name]
     
@@ -301,7 +301,7 @@ async def call_mcp_tool(
     if mcp_name in REQUIRED_ENV_VARS:
         missing = [var for var in REQUIRED_ENV_VARS[mcp_name] if not os.getenv(var)]
         if missing:
-            return f"[ERROR] Cannot use {mcp_name}: Missing required environment variables: {', '.join(missing)}\n\nPlease set these environment variables and restart the DCL wrapper."
+            return f"[ERROR] Cannot use {mcp_name}: Missing required environment variables: {', '.join(missing)}\n\nPlease set these environment variables and restart the gateway."
     
     if arguments is None:
         arguments = {}
@@ -356,5 +356,5 @@ async def call_mcp_tool(
 
 
 if __name__ == "__main__":
-    # Run the DCL Master MCP server
+    # Run the Claude MCP Server Gateway
     mcp.run()
