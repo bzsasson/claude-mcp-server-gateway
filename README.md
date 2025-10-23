@@ -28,7 +28,7 @@ Claude MCP Server Gateway is a Python-based intelligent gateway that implements 
 
 This server gateway pattern revolutionizes how Claude Desktop manages multiple MCP servers, keeping your Model Context Protocol ecosystem lean and efficient.
 
-[🚀 Quick Start](#quick-start) • [📦 Installation](#installation) • [🔧 Configuration](#configuration) • [📚 How It Works](#how-dynamic-mcp-loading-works-3-level-architecture) • [🤝 Contributing](#contributing)
+[Quick Start](#quick-start) • [Installation](#installation) • [Configuration](#configuration) • [How It Works](#how-dynamic-mcp-loading-works-3-level-architecture) • [Contributing](#contributing)
 
 ## How Dynamic MCP Loading Works: 3-Level Architecture
 
@@ -52,7 +52,7 @@ Available MCP Servers:
 ### Level 2: Tool Summaries (~300 tokens per server)
 When Claude needs a specific server, it loads tool summaries:
 
-**Example - Loading GitHub MCP**:
+**Example ,Loading GitHub MCP**:
 ```
 GitHub MCP Tools (51 total):
 - search_repositories: Find GitHub repositories by query
@@ -130,7 +130,7 @@ You: "Find all open issues in the microsoft/vscode repository with the 'bug' lab
 ### Step 2: Claude Discovers Available MCP Servers
 **Claude's thought process**: *"I need to work with GitHub. Let me check what MCP servers are available."*
 
-**Gateway response** (Level 1 - Server Discovery):
+**Gateway response** (Level 1,Server Discovery):
 ```json
 {
   "servers": [
@@ -154,7 +154,7 @@ You: "Find all open issues in the microsoft/vscode repository with the 'bug' lab
 
 **Action**: `load_mcp_tools(mcp_name="github")`
 
-**Gateway response** (Level 2 - Tool Summaries):
+**Gateway response** (Level 2,Tool Summaries):
 ```json
 {
   "tools": [
@@ -200,7 +200,7 @@ The Claude MCP Server Gateway works with **any Model Context Protocol server**:
 - ✅ Docker-based MCP servers
 - ✅ Remote HTTP+SSE MCP servers
 
-**No modifications needed** - if it implements the Model Context Protocol specification, the gateway manages it automatically.
+**No modifications needed** if it implements the Model Context Protocol specification, the gateway manages it automatically.
 
 ## Quick Start
 
@@ -226,7 +226,7 @@ cp .env.example .env
 ```
 
 ### For Claude API/Code Users
-The gateway also works with Claude API and Claude Code - see [Advanced Usage](#advanced-usage).
+The gateway also works with Claude API and Claude Code ,see [Advanced Usage](#advanced-usage).
 
 ## Installation
 
@@ -340,21 +340,21 @@ GATEWAY_INIT_TIMEOUT=30
 Claude MCP Server Gateway comes with popular MCP servers pre-configured and ready to use:
 
 ### Developer Tools
-- **GitHub** - Complete GitHub integration: repositories, issues, PRs, workflows, code scanning
-- **Context7** - Current code documentation and best practices lookup
+- **GitHub** Complete GitHub integration: repositories, issues, PRs, workflows, code scanning
+- **Context7** Current code documentation and best practices lookup
 
 ### SEO & Analytics 
-- **DataForSEO** - SERP data, keyword research, backlink analysis
-- **Google Analytics** - Analytics reporting and metrics
-- **Google Search Console** - Search performance and indexing
+- **DataForSEO** SERP data, keyword research, backlink analysis
+- **Google Analytics** Analytics reporting and metrics
+- **Google Search Console** Search performance and indexing
 
 ### Productivity & Collaboration
-- **Google Workspace** - Gmail, Drive, Calendar, Docs, Sheets integration
-- **Slack** - Team communication and channel management
-- **Memory Extension Pro** - Persistent memory with semantic search
+- **Google Workspace** Gmail, Drive, Calendar, Docs, Sheets integration
+- **Slack** Team communication and channel management
+- **Memory Extension Pro** Persistent memory with semantic search
 
 ### Automation
-- **Apify Actors** - Web scraping and automation workflows
+- **Apify Actors** Web scraping and automation workflows
 
 ## Performance: Real Token Savings
 
@@ -393,7 +393,7 @@ Every token consumed by tool definitions is a token you CAN'T use for:
 - Extensive conversation history for context
 - Detailed specifications and requirements
 
-The Claude MCP Server Gateway doesn't just save tokens - it fundamentally changes what's possible in a single Claude Desktop session.
+The Claude MCP Server Gateway doesn't just save tokens it fundamentally changes what's possible in a single Claude Desktop session.
 
 ## Frequently Asked Questions
 
@@ -413,10 +413,10 @@ The Claude MCP Server Gateway doesn't just save tokens - it fundamentally change
 **Roadmap**: We're adding configurable preload rules for frequently-used MCP servers in v2.1
 
 ### How does this compare to GitHub's dynamic toolsets?
-GitHub MCP offers dynamic toolsets within their server. Claude MCP Server Gateway manages ALL your MCP servers dynamically - GitHub, Slack, Google Drive, and any other Model Context Protocol servers you use. It's a layer above individual server features.
+GitHub MCP offers dynamic toolsets within their server. Claude MCP Server Gateway manages ALL your MCP servers dynamically ,GitHub, Slack, Google Drive, and any other Model Context Protocol servers you use. It's a layer above individual server features.
 
 ### What if I use Claude API instead of Claude Desktop?
-The gateway works with Claude API, Claude Code, and Claude Desktop. Configuration differs slightly - see [Advanced Usage](#advanced-usage) for API-specific setup.
+The gateway works with Claude API, Claude Code, and Claude Desktop. Configuration differs slightly ,see [Advanced Usage](#advanced-usage) for API-specific setup.
 
 ### How do I add my custom MCP server to the gateway?
 Add your server configuration to the gateway's config (see [Configuration](#adding-new-mcp-servers-to-the-gateway)). The gateway automatically discovers and manages any compliant MCP server.
@@ -514,21 +514,21 @@ python -m pytest tests/
 ## Related Resources
 
 ### Official Documentation
-- [Model Context Protocol Specification](https://modelcontextprotocol.io) - Official MCP docs
-- [Claude Desktop Download](https://claude.ai/download) - Get Claude Desktop
-- [Anthropic MCP Guide](https://docs.anthropic.com/mcp) - Anthropic's MCP documentation
+- [Model Context Protocol Specification](https://modelcontextprotocol.io)  Official MCP docs
+- [Claude Desktop Download](https://claude.ai/download)  Get Claude Desktop
+- [Anthropic MCP Guide](https://docs.anthropic.com/mcp)  Anthropic's MCP documentation
 
 ### Community Resources
-- [Awesome MCP Servers](https://github.com/topics/mcp-server) - Discover MCP servers
-- [MCP Server Development Guide](https://modelcontextprotocol.io/docs/server) - Build your own
+- [Awesome MCP Servers](https://github.com/topics/mcp-server)  Discover MCP servers
+- [MCP Server Development Guide](https://modelcontextprotocol.io/docs/server)  Build your own
 
 ### Gateway Ecosystem
-- [Claude MCP Server Gateway Wiki](https://github.com/bzsasson/claude-mcp-server-gateway/wiki) - Extended documentation
-- [Gateway Configuration Examples](https://github.com/bzsasson/claude-mcp-server-gateway/tree/main/examples) - Sample configs
+- [Claude MCP Server Gateway Wiki](https://github.com/bzsasson/claude-mcp-server-gateway/wiki)  Extended documentation
+- [Gateway Configuration Examples](https://github.com/bzsasson/claude-mcp-server-gateway/tree/main/examples)  Sample configs
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+MIT License  see [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
