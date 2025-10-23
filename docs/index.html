@@ -60,7 +60,9 @@
         .subtitle {
             font-size: 1.3em;
             margin-bottom: 30px;
-            opacity: 0.95;
+            opacity: 1.0;
+            color: white;
+            font-weight: 500;
         }
         
         .cta-button {
@@ -239,8 +241,8 @@
     <header>
         <div class="container">
             <h1>Claude MCP Server Gateway</h1>
-            <p class="subtitle">The intelligent gateway for Claude Desktop MCP servers</p>
-            <p style="font-size: 1.2em; margin-bottom: 30px;">Stop wasting 95% of Claude's context window on tool definitions. Load MCP servers dynamically, only when needed.</p>
+            <p class="subtitle">Load MCP tools only when needed, not all at once</p>
+            <p style="font-size: 1.2em; margin-bottom: 30px; color: white; opacity: 1.0;">Each MCP server contains 20-50 tools. With 5 servers installed, that's 100+ tools consuming 15,000 tokens at every startup. The gateway changes this.</p>
             <div>
                 <a href="https://github.com/bzsasson/claude-mcp-server-gateway" class="cta-button">View on GitHub</a>
                 <a href="https://github.com/bzsasson/claude-mcp-server-gateway#quick-start" class="cta-button cta-secondary">Quick Start Guide</a>
@@ -249,30 +251,67 @@
     </header>
 
     <div class="container">
+        <div class="content-section" style="background: #fff3cd; border-left: 4px solid #ffc107; margin-top: 60px;">
+            <h2 style="color: #856404;">The Problem: Context Window Bloat</h2>
+            <p>When you install multiple MCP servers in Claude Desktop, each one loads ALL its tools immediately—whether you need them or not.</p>
+            
+            <ul>
+                <li><strong>GitHub MCP:</strong> 25+ tools loaded at startup</li>
+                <li><strong>Google Workspace:</strong> 35+ tools for Gmail, Drive, Calendar, Sheets</li>
+                <li><strong>DataForSEO:</strong> 30+ tools for keyword research and SEO</li>
+                <li><strong>Context7:</strong> 15+ tools for code documentation</li>
+            </ul>
+            
+            <p><strong>Result:</strong> 100+ tool definitions consuming 15,000+ tokens (85% of your context window) before your conversation even starts.</p>
+            
+            <p><strong>This causes:</strong> Higher API costs, slower responses, reduced reasoning capacity, and potential token limit errors.</p>
+        </div>
+
         <div class="stats">
             <div class="stat-card">
-                <div class="stat-number">95%</div>
-                <div class="stat-label">Token Reduction</div>
+                <div class="stat-number">~300</div>
+                <div class="stat-label">Tokens at Startup</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">3</div>
-                <div class="stat-label">Gateway Tools vs 100+</div>
+                <div class="stat-number">vs 15,000+</div>
+                <div class="stat-label">Without Gateway</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">10+</div>
-                <div class="stat-label">Supported MCP Servers</div>
+                <div class="stat-number">Any MCP</div>
+                <div class="stat-label">Universal Compatibility</div>
             </div>
         </div>
 
+        <div style="background: linear-gradient(135deg, #4caf50 0%, #45a049 100%); color: white; padding: 30px; text-align: center; border-radius: 12px; margin: 40px auto; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+            <h3 style="color: white; margin: 0 0 10px 0; font-size: 1.8em;">✓ Works with ANY Model Context Protocol Server</h3>
+            <p style="margin: 0; font-size: 1.2em; opacity: 0.95;">Python, Node.js, TypeScript, or custom implementations—if it follows the MCP spec, it works</p>
+        </div>
+
         <div class="content-section">
-            <h2>What is Claude MCP Server Gateway?</h2>
+            <h2>The Solution: 3-Level Dynamic Loading</h2>
             <p>A Python-based gateway that acts as a master MCP server for Claude Desktop, intelligently routing requests to other Model Context Protocol servers only when their tools are needed.</p>
             
-            <p>When you have multiple MCP servers configured (GitHub, Google Workspace, DataForSEO, Context7, etc.), Claude normally loads ALL their tools immediately. This gateway revolutionizes that approach:</p>
+            <p>Instead of loading all tools at once, the gateway uses a three-tier loading strategy:</p>
+
+            <h3>Level 1: Server Discovery (~100 tokens)</h3>
+            <p>Claude sees a lightweight list of available MCP servers with brief descriptions.</p>
+            <p style="background: #f0f0f0; padding: 15px; border-radius: 6px; font-style: italic;">Example: "GitHub MCP available - Provides repository and code management tools"</p>
+            
+            <h3>Level 2: Tool Summaries (~200 tokens when needed)</h3>
+            <p>When you mention a specific server, the gateway loads brief descriptions of its available tools.</p>
+            <p style="background: #f0f0f0; padding: 15px; border-radius: 6px; font-style: italic;">Example: You ask about GitHub → Gateway loads: "create_issue, search_repos, get_file_contents..."</p>
+            
+            <h3>Level 3: Active Tools (only what you use)</h3>
+            <p>Finally, only the specific tools you need are loaded with their full definitions.</p>
+            <p style="background: #f0f0f0; padding: 15px; border-radius: 6px; font-style: italic;">Example: You say "search my repos" → Gateway loads only search_repositories</p>
+
+            <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <p style="margin: 0;"><strong>Key Insight:</strong> The gateway loads tools on a need-to-know basis. Each MCP server can contain 20-50 tools—but you typically only use 2-3 per conversation.</p>
+            </div>
             
             <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                <p style="margin: 0;"><strong>Traditional Approach:</strong> Claude → 100+ tools loaded → Context window saturated</p>
-                <p style="margin: 10px 0 0 0;"><strong>Gateway Approach:</strong> Claude → 3 gateway tools → Load MCP servers as needed</p>
+                <p style="margin: 0;"><strong>Traditional Approach:</strong> Claude → Load ALL 100+ tools → 15,000 tokens → Context saturated</p>
+                <p style="margin: 10px 0 0 0;"><strong>Gateway Approach:</strong> Claude → 3 gateway tools (300 tokens) → Load as needed → 95% token savings</p>
             </div>
         </div>
 
@@ -316,6 +355,31 @@ cp .env.example .env
         </div>
 
         <div class="content-section">
+            <h2>How It Works: Example Interaction</h2>
+            <p>Here's what happens when you ask Claude to search GitHub:</p>
+            <pre><code>You: "Search GitHub for MCP server projects I've starred"
+
+Claude's Process:
+1. Calls loader to discover available servers
+   → Sees: GitHub MCP, Google Workspace, DataForSEO...
+   
+2. Identifies GitHub MCP is needed
+   → Loads GitHub tool summaries (~200 tokens)
+   
+3. Sees search_repositories tool is available
+   → Loads only that tool's full definition (~150 tokens)
+   
+4. Executes the search
+   → Returns your starred MCP projects
+
+Total tokens loaded: ~350 instead of 15,000+</code></pre>
+            
+            <p style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2196F3;">
+                <strong>The key difference:</strong> Traditional setup loads all 100+ tools at startup. The gateway loads only the 1-2 tools you actually use in each conversation.
+            </p>
+        </div>
+
+        <div class="content-section">
             <h2>Compatible MCP Servers</h2>
             <p>Works with any Model Context Protocol server including:</p>
             <ul>
@@ -346,23 +410,38 @@ cp .env.example .env
 
         <div class="content-section">
             <h2>Performance Benchmarks</h2>
-            <p>Real-world token usage comparison:</p>
+            <p><strong>Understanding the token impact:</strong> Each tool definition that Claude loads includes the tool name, description, parameter schema, and examples—averaging ~150 tokens per tool.</p>
+            
+            <p>Here's a real-world comparison with 5 common MCP servers:</p>
             
             <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                <h4 style="margin-top: 0;">Without Gateway (5 MCP Servers)</h4>
+                <h4 style="margin-top: 0; color: #d32f2f;">❌ Without Gateway (Traditional Setup)</h4>
                 <ul style="margin-left: 20px;">
                     <li>GitHub MCP: 25 tools × 150 tokens = 3,750 tokens</li>
-                    <li>DataForSEO MCP: 30 tools × 150 tokens = 4,500 tokens</li>
                     <li>Google Workspace: 35 tools × 150 tokens = 5,250 tokens</li>
-                    <li><strong>Total: ~13,500 tokens (85% of context!)</strong></li>
+                    <li>DataForSEO MCP: 30 tools × 150 tokens = 4,500 tokens</li>
+                    <li>Context7: 15 tools × 150 tokens = 2,250 tokens</li>
+                    <li>Filesystem: 10 tools × 150 tokens = 1,500 tokens</li>
+                    <li><strong>Total: 115 tools = ~17,250 tokens consumed at startup</strong></li>
+                    <li style="color: #d32f2f;"><strong>That's 86% of Claude's context window gone before you even start!</strong></li>
                 </ul>
                 
-                <h4>With Claude MCP Server Gateway</h4>
+                <h4 style="color: #2e7d32;">✅ With Claude MCP Server Gateway</h4>
                 <ul style="margin-left: 20px;">
-                    <li>Gateway tools: 3 tools × 100 tokens = 300 tokens</li>
-                    <li><strong>Total: ~300 tokens (2% of context)</strong></li>
+                    <li>Gateway tools: 3 tools × 100 tokens = 300 tokens at startup</li>
+                    <li>Tools loaded on-demand: Only what you actually use (typically 1-3 tools per conversation)</li>
+                    <li><strong>Average conversation: ~600-800 tokens total (300 + 2-3 tools)</strong></li>
+                    <li style="color: #2e7d32;"><strong>Savings: 96% reduction in token usage!</strong></li>
                 </ul>
             </div>
+
+            <p><strong>What this means for you:</strong></p>
+            <ul>
+                <li><strong>Lower costs:</strong> Pay only for the tokens you actually need</li>
+                <li><strong>Faster responses:</strong> Claude processes requests faster with less context</li>
+                <li><strong>Better reasoning:</strong> More context window available for your actual conversation</li>
+                <li><strong>No token limits:</strong> Room to add more MCP servers without hitting limits</li>
+            </ul>
         </div>
 
         <div class="content-section">
