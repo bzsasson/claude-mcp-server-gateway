@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude MCP Server Gateway - Dynamic Gateway for Model Context Protocol Servers</title>
+    <meta name="description" content="Claude MCP Server Gateway reduces Claude Desktop token usage by 95% through intelligent, dynamic MCP server management. The only gateway you need for Model Context Protocol.">
+    <meta name="keywords" content="claude-mcp-server, mcp server gateway, claude desktop, model context protocol, python mcp server, token optimization, claude ai, anthropic, mcp-gateway">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bzsasson.github.io/claude-mcp-server-gateway/">
+    <meta property="og:title" content="Claude MCP Server Gateway">
+    <meta property="og:description" content="Intelligent gateway for Claude Desktop MCP servers. Reduce token usage by 95%.">
+    <meta property="og:image" content="https://opengraph.githubassets.com/1/bzsasson/claude-mcp-server-gateway">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://bzsasson.github.io/claude-mcp-server-gateway/">
+    <meta property="twitter:title" content="Claude MCP Server Gateway">
+    <meta property="twitter:description" content="Intelligent gateway for Claude Desktop MCP servers. Reduce token usage by 95%.">
+    <meta property="twitter:image" content="https://opengraph.githubassets.com/1/bzsasson/claude-mcp-server-gateway">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bzsasson.github.io/claude-mcp-server-gateway/">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #6B46C1 0%, #4F46E5 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #4F46E5;
+            padding: 15px 35px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1em;
+            margin: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .cta-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #6B46C1;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.1em;
+            color: #666;
+        }
+        
+        .content-section {
+            background: white;
+            margin: 40px auto;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #6B46C1;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        h3 {
+            color: #4F46E5;
+            font-size: 1.5em;
+            margin: 30px 0 15px 0;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+            color: #555;
+        }
+        
+        ul {
+            margin: 20px 0 20px 30px;
+        }
+        
+        li {
+            margin-bottom: 12px;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .feature-box {
+            padding: 25px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #6B46C1;
+        }
+        
+        .feature-box h4 {
+            color: #4F46E5;
+            margin-bottom: 10px;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: #d4d4d4;
+        }
+        
+        footer {
+            background: #2d2d2d;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+        
+        footer a {
+            color: #4F46E5;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .subtitle {
+                font-size: 1.1em;
+            }
+            
+            .content-section {
+                padding: 30px 20px;
+            }
+            
+            .stat-number {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Claude MCP Server Gateway</h1>
+            <p class="subtitle">The intelligent gateway for Claude Desktop MCP servers</p>
+            <p style="font-size: 1.2em; margin-bottom: 30px;">Stop wasting 95% of Claude's context window on tool definitions. Load MCP servers dynamically, only when needed.</p>
+            <div>
+                <a href="https://github.com/bzsasson/claude-mcp-server-gateway" class="cta-button">View on GitHub</a>
+                <a href="https://github.com/bzsasson/claude-mcp-server-gateway#quick-start" class="cta-button cta-secondary">Quick Start Guide</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">95%</div>
+                <div class="stat-label">Token Reduction</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Gateway Tools vs 100+</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">10+</div>
+                <div class="stat-label">Supported MCP Servers</div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>What is Claude MCP Server Gateway?</h2>
+            <p>A Python-based gateway that acts as a master MCP server for Claude Desktop, intelligently routing requests to other Model Context Protocol servers only when their tools are needed.</p>
+            
+            <p>When you have multiple MCP servers configured (GitHub, Google Workspace, DataForSEO, Context7, etc.), Claude normally loads ALL their tools immediately. This gateway revolutionizes that approach:</p>
+            
+            <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <p style="margin: 0;"><strong>Traditional Approach:</strong> Claude → 100+ tools loaded → Context window saturated</p>
+                <p style="margin: 10px 0 0 0;"><strong>Gateway Approach:</strong> Claude → 3 gateway tools → Load MCP servers as needed</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Why Use a Gateway?</h2>
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <h4>Token Optimization</h4>
+                    <p>Load tools on-demand instead of all at once. Reduce initial token usage from 10,000+ to just 300 tokens.</p>
+                </div>
+                <div class="feature-box">
+                    <h4>Better Performance</h4>
+                    <p>Claude processes 3 tools faster than 100+. Faster response times and more accurate tool selection.</p>
+                </div>
+                <div class="feature-box">
+                    <h4>Error Isolation</h4>
+                    <p>MCP server failures don't affect others. Each server operates independently.</p>
+                </div>
+                <div class="feature-box">
+                    <h4>Central Management</h4>
+                    <p>Configure all MCP servers in one place. Single point of control for your entire MCP ecosystem.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Quick Installation</h2>
+            <pre><code># Clone the gateway
+git clone https://github.com/bzsasson/claude-mcp-server-gateway.git
+cd claude-mcp-server-gateway
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure your MCP servers
+cp .env.example .env
+# Edit .env with your API keys
+
+# Add to Claude Desktop config
+# See README for detailed instructions</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Compatible MCP Servers</h2>
+            <p>Works with any Model Context Protocol server including:</p>
+            <ul>
+                <li><strong>GitHub MCP Server</strong> - Repositories, issues, PRs, code search</li>
+                <li><strong>DataForSEO MCP</strong> - SERP data, keyword research, backlinks</li>
+                <li><strong>Google Workspace MCP</strong> - Gmail, Drive, Calendar, Docs, Sheets</li>
+                <li><strong>Context7</strong> - Code documentation and best practices</li>
+                <li><strong>Your custom MCP servers</strong> - Python, Node.js, or TypeScript</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>How It Works</h2>
+            <p>The gateway operates as an intelligent routing layer between Claude and your MCP servers:</p>
+            
+            <h3>1. Discovery Phase</h3>
+            <p>Claude asks the gateway: <em>"What MCP servers are available?"</em></p>
+            <p>The gateway responds with a brief list of configured servers and their descriptions.</p>
+            
+            <h3>2. Dynamic Loading</h3>
+            <p>When you need specific tools: <em>"Load the GitHub MCP server tools"</em></p>
+            <p>The gateway connects to GitHub's MCP server and exposes its tools on-demand.</p>
+            
+            <h3>3. Execution</h3>
+            <p>Use tools naturally: <em>"Search GitHub for MCP server repositories"</em></p>
+            <p>The gateway routes the request to the appropriate MCP server automatically.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Performance Benchmarks</h2>
+            <p>Real-world token usage comparison:</p>
+            
+            <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h4 style="margin-top: 0;">Without Gateway (5 MCP Servers)</h4>
+                <ul style="margin-left: 20px;">
+                    <li>GitHub MCP: 25 tools × 150 tokens = 3,750 tokens</li>
+                    <li>DataForSEO MCP: 30 tools × 150 tokens = 4,500 tokens</li>
+                    <li>Google Workspace: 35 tools × 150 tokens = 5,250 tokens</li>
+                    <li><strong>Total: ~13,500 tokens (85% of context!)</strong></li>
+                </ul>
+                
+                <h4>With Claude MCP Server Gateway</h4>
+                <ul style="margin-left: 20px;">
+                    <li>Gateway tools: 3 tools × 100 tokens = 300 tokens</li>
+                    <li><strong>Total: ~300 tokens (2% of context)</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Getting Started</h2>
+            <p>Ready to optimize your Claude Desktop setup?</p>
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="https://github.com/bzsasson/claude-mcp-server-gateway#installation" class="cta-button">View Installation Guide</a>
+                <a href="https://github.com/bzsasson/claude-mcp-server-gateway/blob/main/CONTRIBUTING.md" class="cta-button cta-secondary" style="color: #4F46E5; border-color: #4F46E5;">Contribute</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p style="margin-bottom: 15px;">Built with the <a href="https://modelcontextprotocol.io">Model Context Protocol</a></p>
+            <p style="margin-bottom: 15px;">For <a href="https://claude.ai">Claude Desktop</a> | <a href="https://github.com/bzsasson/claude-mcp-server-gateway">GitHub Repository</a></p>
+            <p style="font-size: 0.9em; opacity: 0.8;">© 2025 Claude MCP Server Gateway | MIT License</p>
+        </div>
+    </footer>
+</body>
+</html>
