@@ -1,32 +1,34 @@
 # claude-mcp-server-gateway
 
-A gateway that sits between Claude Desktop and your MCP servers. Instead of loading all MCP tools at startup (which eats up most of your context window), it loads them on demand.
+A Python MCP server gateway that sits between Claude Desktop and your Model Context Protocol servers. Instead of loading all MCP tools at startup, it loads them on demand.
 
-## The problem
+Works with Claude Desktop, Claude Code, and Cline.
 
-When you connect multiple MCP servers to Claude Desktop, they all load immediately:
-- GitHub MCP: 51 tools
-- Slack MCP: 20 tools  
+## The MCP server problem
+
+When you connect multiple MCP servers to Claude:
+- GitHub MCP server: 51 tools
+- Slack MCP server: 20 tools  
 - Google Drive MCP: 15 tools
 - Filesystem MCP: 12 tools
 
-That's 100+ tool definitions loaded before you even start talking. Each tool definition includes JSON schemas that consume tokens.
+That's 100+ MCP tool definitions loaded before you even start. Each tool's JSON schema eats up tokens.
 
-## What this does
+## What this Claude MCP server gateway does
 
-This gateway presents itself as a single MCP server with 3 tools:
-1. `list_available_mcps` - shows what MCP servers are configured
+The gateway acts as a single MCP server with 3 tools:
+1. `list_available_mcps` - shows configured MCP servers
 2. `load_mcp_tools` - loads tools from a specific MCP server
-3. `call_mcp_tool` - actually runs the tool
+3. `call_mcp_tool` - executes the tool
 
-MCP servers only spin up when Claude needs them.
+Model Context Protocol servers only start when Claude actually needs them.
 
 ## Setup
 
 ### Requirements
-- Python 3.11+
-- Claude Desktop
-- The MCP servers you want to use
+- Python 3.11+ (for MCP Python SDK)
+- Claude Desktop, Claude Code, or Cline
+- MCP servers you want to use
 
 ### Install
 
@@ -40,15 +42,16 @@ source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install mcp python-dotenv
 ```
 
-### Configure
+### Configure API keys
 
-1. Set up your API keys:
 ```bash
 cp .env.example .env
 # Edit .env with your tokens
 ```
 
-2. Add to Claude Desktop config:
+## Claude Desktop MCP server configuration
+
+Add to your Claude Desktop config:
 
 **Mac**: `~/Library/Application Support/Claude/claude_desktop_config.json`  
 **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`  
@@ -67,16 +70,88 @@ cp .env.example .env
 
 Restart Claude Desktop.
 
+## How to add MCP server to Claude Code
+
+Claude Code MCP server setup uses a similar config with one additional field.
+
+### User-level configuration (all projects)
+
+Edit `~/.claude.json`:
+
+```json
+{
+  "mcpServers": {
+    "gateway": {
+      "type": "stdio",
+      "command": "/path/to/.venv/bin/python",
+      "args": ["/path/to/claude-mcp-server-gateway/dcl_wrapper.py"]
+    }
+  }
+}
+```
+
+### Project-level configuration
+
+For project-specific MCP servers, create `.mcp.json` in your project root:
+
+```json
+{
+  "mcpServers": {
+    "gateway": {
+      "type": "stdio",
+      "command": "/path/to/.venv/bin/python",
+      "args": ["/path/to/claude-mcp-server-gateway/dcl_wrapper.py"]
+    }
+  }
+}
+```
+
+Claude Code will prompt for approval when using project-scoped servers.
+
+### Alternative: Claude Code CLI
+
+```bash
+# Add the gateway using CLI
+claude mcp add gateway --scope user \
+  --command /path/to/.venv/bin/python \
+  -- /path/to/claude-mcp-server-gateway/dcl_wrapper.py
+
+# Verify it's added
+claude mcp list
+```
+
+## Cline MCP server configuration
+
+For Cline (VSCode extension), the MCP server gateway configuration goes in:
+
+**Mac**: `~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`  
+**Windows**: `%APPDATA%/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`  
+**Linux**: `~/.config/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
+
+```json
+{
+  "mcpServers": {
+    "gateway": {
+      "command": "/path/to/.venv/bin/python",
+      "args": ["/path/to/claude-mcp-server-gateway/dcl_wrapper.py"],
+      "disabled": false
+    }
+  }
+}
+```
+
+Restart VSCode after updating.
+
 ## How it works
 
-1. Claude starts → sees only the gateway (3 tools)
+1. Claude starts → sees gateway (3 tools)
 2. You ask about GitHub → Claude calls `list_available_mcps`
-3. Claude sees GitHub is available → calls `load_mcp_tools("github")`  
+3. Claude sees GitHub available → calls `load_mcp_tools("github")`  
 4. Gateway returns GitHub's tool list
 5. Claude picks the right tool → calls `call_mcp_tool("github", "search_repositories", {...})`
 6. Gateway spins up GitHub MCP, runs the tool, returns results
 
-## Adding MCP servers
+## Adding MCP servers to the gateway
 
 Edit `dcl_wrapper.py` and add to the `MCP_SERVERS` dict:
 
@@ -107,9 +182,26 @@ MCP_SERVERS = {
 
 ## Limitations
 
-- Adds a small delay on first tool use (server startup)
-- Each MCP server connection is temporary (closes after use)
+- Small delay on first tool use (server startup)
+- Each MCP server connection is temporary
 - No persistence between calls
+
+## Troubleshooting
+
+### Gateway not appearing
+- Check Python path in config points to virtual environment
+- Verify `dcl_wrapper.py` path is correct
+- Restart Claude Desktop/Code/VSCode completely
+
+### MCP server connection errors
+- Check API keys in `.env` file
+- Verify MCP server package is installed
+- Check gateway logs for errors
+
+### Claude Code specific issues
+- Make sure to include `"type": "stdio"` in config
+- For project configs, approve when prompted
+- Use `claude mcp list` to verify installation
 
 ## Files
 
