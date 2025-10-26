@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claude MCP Server Gateway - Dynamic Gateway for Model Context Protocol Servers</title>
-    <meta name="description" content="Claude MCP Server Gateway reduces Claude Desktop token usage by 95% through intelligent, dynamic MCP server management. The only gateway you need for Model Context Protocol.">
-    <meta name="keywords" content="claude-mcp-server, mcp server gateway, claude desktop, model context protocol, python mcp server, token optimization, claude ai, anthropic, mcp-gateway">
+    <title>Claude MCP Server Gateway - Works with Claude Desktop, Claude Code, and Cline</title>
+    <meta name="description" content="Claude MCP Server Gateway works with Claude Desktop, Claude Code, and Cline. Reduces token usage by 95% through intelligent MCP server management.">
+    <meta name="keywords" content="claude mcp server, mcp server gateway, claude desktop, claude code, cline, model context protocol, python mcp server, token optimization">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://bzsasson.github.io/claude-mcp-server-gateway/">
     <meta property="og:title" content="Claude MCP Server Gateway">
-    <meta property="og:description" content="Intelligent gateway for Claude Desktop MCP servers. Reduce token usage by 95%.">
+    <meta property="og:description" content="Gateway for Claude Desktop, Claude Code, and Cline MCP servers. Reduce token usage by 95%.">
     <meta property="og:image" content="https://opengraph.githubassets.com/1/bzsasson/claude-mcp-server-gateway">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://bzsasson.github.io/claude-mcp-server-gateway/">
     <meta property="twitter:title" content="Claude MCP Server Gateway">
-    <meta property="twitter:description" content="Intelligent gateway for Claude Desktop MCP servers. Reduce token usage by 95%.">
+    <meta property="twitter:description" content="Gateway for Claude Desktop, Claude Code, and Cline MCP servers. Reduce token usage by 95%.">
     <meta property="twitter:image" content="https://opengraph.githubassets.com/1/bzsasson/claude-mcp-server-gateway">
     
     <!-- Canonical URL -->
@@ -242,10 +242,10 @@
         <div class="container">
             <h1>Claude MCP Server Gateway</h1>
             <p class="subtitle">Load MCP tools only when needed, not all at once</p>
-            <p style="font-size: 1.2em; margin-bottom: 30px; color: white; opacity: 1.0;">Each MCP server contains 20-50 tools. With 5 servers installed, that's 100+ tools consuming 15,000 tokens at every startup. The gateway changes this.</p>
+            <p style="font-size: 1.2em; margin-bottom: 30px; color: white; opacity: 1.0;">Works with Claude Desktop, Claude Code, and Cline (VSCode)</p>
             <div>
                 <a href="https://github.com/bzsasson/claude-mcp-server-gateway" class="cta-button">View on GitHub</a>
-                <a href="https://github.com/bzsasson/claude-mcp-server-gateway#quick-start" class="cta-button cta-secondary">Quick Start Guide</a>
+                <a href="#installation" class="cta-button cta-secondary">Quick Start Guide</a>
             </div>
         </div>
     </header>
@@ -253,7 +253,7 @@
     <div class="container">
         <div class="content-section" style="background: #fff3cd; border-left: 4px solid #ffc107; margin-top: 60px;">
             <h2 style="color: #856404;">The Problem: Context Window Bloat</h2>
-            <p>When you install multiple MCP servers in Claude Desktop, each one loads ALL its tools immediately—whether you need them or not.</p>
+            <p>When you install multiple MCP servers in Claude Desktop, Claude Code, or Cline, each one loads ALL its tools immediately.</p>
             
             <ul>
                 <li><strong>GitHub MCP:</strong> 25+ tools loaded at startup</li>
@@ -277,19 +277,39 @@
                 <div class="stat-label">Without Gateway</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">Any MCP</div>
-                <div class="stat-label">Universal Compatibility</div>
+                <div class="stat-number">3 Platforms</div>
+                <div class="stat-label">Desktop, Code, Cline</div>
             </div>
         </div>
 
         <div style="background: linear-gradient(135deg, #4caf50 0%, #45a049 100%); color: white; padding: 30px; text-align: center; border-radius: 12px; margin: 40px auto; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-            <h3 style="color: white; margin: 0 0 10px 0; font-size: 1.8em;">✓ Works with ANY Model Context Protocol Server</h3>
-            <p style="margin: 0; font-size: 1.2em; opacity: 0.95;">Python, Node.js, TypeScript, or custom implementations—if it follows the MCP spec, it works</p>
+            <h3 style="color: white; margin: 0 0 10px 0; font-size: 1.8em;">Works with ANY Model Context Protocol Server</h3>
+            <p style="margin: 0; font-size: 1.2em; opacity: 0.95;">Python, Node.js, TypeScript, or custom implementations - if it follows the MCP spec, it works</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Platform Support</h2>
+            <p>The Claude MCP Server Gateway works seamlessly with all major Claude platforms:</p>
+            
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <h4>Claude Desktop</h4>
+                    <p>Native desktop application with full MCP support. Configure via <code>claude_desktop_config.json</code></p>
+                </div>
+                <div class="feature-box">
+                    <h4>Claude Code</h4>
+                    <p>Terminal-based Claude with project and user scopes. Configure via <code>.claude.json</code> or CLI</p>
+                </div>
+                <div class="feature-box">
+                    <h4>Cline (VSCode)</h4>
+                    <p>VSCode extension for Claude. Configure via <code>cline_mcp_settings.json</code></p>
+                </div>
+            </div>
         </div>
 
         <div class="content-section">
             <h2>The Solution: 3-Level Dynamic Loading</h2>
-            <p>A Python-based gateway that acts as a master MCP server for Claude Desktop, intelligently routing requests to other Model Context Protocol servers only when their tools are needed.</p>
+            <p>A Python-based gateway that acts as a master MCP server, intelligently routing requests to other Model Context Protocol servers only when their tools are needed.</p>
             
             <p>Instead of loading all tools at once, the gateway uses a three-tier loading strategy:</p>
 
@@ -299,19 +319,19 @@
             
             <h3>Level 2: Tool Summaries (~200 tokens when needed)</h3>
             <p>When you mention a specific server, the gateway loads brief descriptions of its available tools.</p>
-            <p style="background: #f0f0f0; padding: 15px; border-radius: 6px; font-style: italic;">Example: You ask about GitHub → Gateway loads: "create_issue, search_repos, get_file_contents..."</p>
+            <p style="background: #f0f0f0; padding: 15px; border-radius: 6px; font-style: italic;">Example: You ask about GitHub, Gateway loads: "create_issue, search_repos, get_file_contents..."</p>
             
             <h3>Level 3: Active Tools (only what you use)</h3>
             <p>Finally, only the specific tools you need are loaded with their full definitions.</p>
-            <p style="background: #f0f0f0; padding: 15px; border-radius: 6px; font-style: italic;">Example: You say "search my repos" → Gateway loads only search_repositories</p>
+            <p style="background: #f0f0f0; padding: 15px; border-radius: 6px; font-style: italic;">Example: You say "search my repos", Gateway loads only search_repositories</p>
 
             <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                <p style="margin: 0;"><strong>Key Insight:</strong> The gateway loads tools on a need-to-know basis. Each MCP server can contain 20-50 tools—but you typically only use 2-3 per conversation.</p>
+                <p style="margin: 0;"><strong>Key Insight:</strong> The gateway loads tools on a need-to-know basis. Each MCP server can contain 20-50 tools, but you typically only use 2-3 per conversation.</p>
             </div>
             
             <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                <p style="margin: 0;"><strong>Traditional Approach:</strong> Claude → Load ALL 100+ tools → 15,000 tokens → Context saturated</p>
-                <p style="margin: 10px 0 0 0;"><strong>Gateway Approach:</strong> Claude → 3 gateway tools (300 tokens) → Load as needed → 95% token savings</p>
+                <p style="margin: 0;"><strong>Traditional Approach:</strong> Claude loads ALL 100+ tools (15,000 tokens), Context saturated</p>
+                <p style="margin: 10px 0 0 0;"><strong>Gateway Approach:</strong> Claude loads 3 gateway tools (300 tokens), Load as needed, 95% token savings</p>
             </div>
         </div>
 
@@ -337,7 +357,7 @@
             </div>
         </div>
 
-        <div class="content-section">
+        <div class="content-section" id="installation">
             <h2>Quick Installation</h2>
             <pre><code># Clone the gateway
 git clone https://github.com/bzsasson/claude-mcp-server-gateway.git
@@ -350,72 +370,57 @@ pip install -r requirements.txt
 cp .env.example .env
 # Edit .env with your API keys
 
-# Add to Claude Desktop config
+# Add to Claude Desktop, Claude Code, or Cline config
 # See README for detailed instructions</code></pre>
         </div>
 
         <div class="content-section">
-            <h2>How It Works: Example Interaction</h2>
-            <p>Here's what happens when you ask Claude to search GitHub:</p>
-            <pre><code>You: "Search GitHub for MCP server projects I've starred"
-
-Claude's Process:
-1. Calls loader to discover available servers
-   → Sees: GitHub MCP, Google Workspace, DataForSEO...
-   
-2. Identifies GitHub MCP is needed
-   → Loads GitHub tool summaries (~200 tokens)
-   
-3. Sees search_repositories tool is available
-   → Loads only that tool's full definition (~150 tokens)
-   
-4. Executes the search
-   → Returns your starred MCP projects
-
-Total tokens loaded: ~350 instead of 15,000+</code></pre>
+            <h2>How to Configure for Each Platform</h2>
             
-            <p style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2196F3;">
-                <strong>The key difference:</strong> Traditional setup loads all 100+ tools at startup. The gateway loads only the 1-2 tools you actually use in each conversation.
-            </p>
-        </div>
-
-        <div class="content-section">
-            <h2>Compatible MCP Servers</h2>
-            <p>Works with any Model Context Protocol server including:</p>
-            <ul>
-                <li><strong>GitHub MCP Server</strong> - Repositories, issues, PRs, code search</li>
-                <li><strong>DataForSEO MCP</strong> - SERP data, keyword research, backlinks</li>
-                <li><strong>Google Workspace MCP</strong> - Gmail, Drive, Calendar, Docs, Sheets</li>
-                <li><strong>Context7</strong> - Code documentation and best practices</li>
-                <li><strong>Your custom MCP servers</strong> - Python, Node.js, or TypeScript</li>
-            </ul>
-        </div>
-
-        <div class="content-section">
-            <h2>How It Works</h2>
-            <p>The gateway operates as an intelligent routing layer between Claude and your MCP servers:</p>
+            <h3>Claude Desktop MCP Server Configuration</h3>
+            <p>Add to <code>claude_desktop_config.json</code>:</p>
+            <pre><code>{
+  "mcpServers": {
+    "gateway": {
+      "command": "/path/to/.venv/bin/python",
+      "args": ["/path/to/claude-mcp-server-gateway/dcl_wrapper.py"]
+    }
+  }
+}</code></pre>
             
-            <h3>1. Discovery Phase</h3>
-            <p>Claude asks the gateway: <em>"What MCP servers are available?"</em></p>
-            <p>The gateway responds with a brief list of configured servers and their descriptions.</p>
+            <h3>How to Add MCP Server to Claude Code</h3>
+            <p>For Claude Code, add to <code>~/.claude.json</code>:</p>
+            <pre><code>{
+  "mcpServers": {
+    "gateway": {
+      "type": "stdio",
+      "command": "/path/to/.venv/bin/python",
+      "args": ["/path/to/claude-mcp-server-gateway/dcl_wrapper.py"]
+    }
+  }
+}</code></pre>
             
-            <h3>2. Dynamic Loading</h3>
-            <p>When you need specific tools: <em>"Load the GitHub MCP server tools"</em></p>
-            <p>The gateway connects to GitHub's MCP server and exposes its tools on-demand.</p>
-            
-            <h3>3. Execution</h3>
-            <p>Use tools naturally: <em>"Search GitHub for MCP server repositories"</em></p>
-            <p>The gateway routes the request to the appropriate MCP server automatically.</p>
+            <h3>Cline MCP Server Setup</h3>
+            <p>For Cline, add to <code>cline_mcp_settings.json</code>:</p>
+            <pre><code>{
+  "mcpServers": {
+    "gateway": {
+      "command": "/path/to/.venv/bin/python",
+      "args": ["/path/to/claude-mcp-server-gateway/dcl_wrapper.py"],
+      "disabled": false
+    }
+  }
+}</code></pre>
         </div>
 
         <div class="content-section">
             <h2>Performance Benchmarks</h2>
-            <p><strong>Understanding the token impact:</strong> Each tool definition that Claude loads includes the tool name, description, parameter schema, and examples—averaging ~150 tokens per tool.</p>
+            <p><strong>Understanding the token impact:</strong> Each tool definition that Claude loads includes the tool name, description, parameter schema, and examples, averaging ~150 tokens per tool.</p>
             
             <p>Here's a real-world comparison with 5 common MCP servers:</p>
             
             <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                <h4 style="margin-top: 0; color: #d32f2f;">❌ Without Gateway (Traditional Setup)</h4>
+                <h4 style="margin-top: 0; color: #d32f2f;">Without Gateway (Traditional Setup)</h4>
                 <ul style="margin-left: 20px;">
                     <li>GitHub MCP: 25 tools × 150 tokens = 3,750 tokens</li>
                     <li>Google Workspace: 35 tools × 150 tokens = 5,250 tokens</li>
@@ -426,7 +431,7 @@ Total tokens loaded: ~350 instead of 15,000+</code></pre>
                     <li style="color: #d32f2f;"><strong>That's 86% of Claude's context window gone before you even start!</strong></li>
                 </ul>
                 
-                <h4 style="color: #2e7d32;">✅ With Claude MCP Server Gateway</h4>
+                <h4 style="color: #2e7d32;">With Claude MCP Server Gateway</h4>
                 <ul style="margin-left: 20px;">
                     <li>Gateway tools: 3 tools × 100 tokens = 300 tokens at startup</li>
                     <li>Tools loaded on-demand: Only what you actually use (typically 1-3 tools per conversation)</li>
@@ -446,7 +451,7 @@ Total tokens loaded: ~350 instead of 15,000+</code></pre>
 
         <div class="content-section">
             <h2>Getting Started</h2>
-            <p>Ready to optimize your Claude Desktop setup?</p>
+            <p>Ready to optimize your Claude Desktop, Claude Code, or Cline setup?</p>
             <div style="text-align: center; margin: 30px 0;">
                 <a href="https://github.com/bzsasson/claude-mcp-server-gateway#installation" class="cta-button">View Installation Guide</a>
                 <a href="https://github.com/bzsasson/claude-mcp-server-gateway/blob/main/CONTRIBUTING.md" class="cta-button cta-secondary" style="color: #4F46E5; border-color: #4F46E5;">Contribute</a>
@@ -457,7 +462,7 @@ Total tokens loaded: ~350 instead of 15,000+</code></pre>
     <footer>
         <div class="container">
             <p style="margin-bottom: 15px;">Built with the <a href="https://modelcontextprotocol.io">Model Context Protocol</a></p>
-            <p style="margin-bottom: 15px;">For <a href="https://claude.ai">Claude Desktop</a> | <a href="https://github.com/bzsasson/claude-mcp-server-gateway">GitHub Repository</a></p>
+            <p style="margin-bottom: 15px;">For <a href="https://claude.ai">Claude Desktop</a>, <a href="https://docs.claude.com/en/docs/claude-code">Claude Code</a>, and <a href="https://cline.bot">Cline</a> | <a href="https://github.com/bzsasson/claude-mcp-server-gateway">GitHub Repository</a></p>
             <p style="font-size: 0.9em; opacity: 0.8;">© 2025 Claude MCP Server Gateway | MIT License</p>
         </div>
     </footer>
