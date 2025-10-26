@@ -1,4 +1,4 @@
-# claude-mcp-server-gateway
+# Claude MCP server gateway
 
 A Python MCP server gateway for Claude Desktop, Claude Code, and Cline. Instead of loading all MCP tools at startup, it loads them on demand.
 
