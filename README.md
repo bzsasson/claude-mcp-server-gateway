@@ -1,8 +1,16 @@
 # claude-mcp-server-gateway
 
-A Python MCP server gateway that sits between Claude Desktop and your Model Context Protocol servers. Instead of loading all MCP tools at startup, it loads them on demand.
+A Python MCP server gateway for Claude Desktop, Claude Code, and Cline. Instead of loading all MCP tools at startup, it loads them on demand.
 
-Works with Claude Desktop, Claude Code, and Cline.
+**Works with:** Claude Desktop (app), Claude Code (terminal), Cline (VSCode extension)
+
+## Compatibility
+
+| Platform | Config File | Supported |
+|----------|------------|----------|
+| Claude Desktop | `claude_desktop_config.json` | Yes |
+| Claude Code | `.claude.json` or `.mcp.json` | Yes |
+| Cline (VSCode) | `cline_mcp_settings.json` | Yes |
 
 ## The MCP server problem
 
@@ -144,11 +152,11 @@ Restart VSCode after updating.
 
 ## How it works
 
-1. Claude starts → sees gateway (3 tools)
-2. You ask about GitHub → Claude calls `list_available_mcps`
-3. Claude sees GitHub available → calls `load_mcp_tools("github")`  
+1. Claude starts - sees gateway (3 tools)
+2. You ask about GitHub - Claude calls `list_available_mcps`
+3. Claude sees GitHub available - calls `load_mcp_tools("github")`  
 4. Gateway returns GitHub's tool list
-5. Claude picks the right tool → calls `call_mcp_tool("github", "search_repositories", {...})`
+5. Claude picks the right tool - calls `call_mcp_tool("github", "search_repositories", {...})`
 6. Gateway spins up GitHub MCP, runs the tool, returns results
 
 ## Adding MCP servers to the gateway
