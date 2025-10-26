@@ -1,8 +1,8 @@
 # Claude MCP server gateway
 
-A Python MCP server gateway for Claude Desktop, Claude Code, and Cline. Instead of loading all MCP tools at startup, it loads them on demand.
+A Python MCP server gateway for Claude Desktop, Claude Code, Cline and Roo. Instead of loading all MCP tools at startup, it loads them on demand.
 
-**Works with:** Claude Desktop (app), Claude Code (terminal), Cline (VSCode extension)
+**Works with:** Claude Desktop (app), Claude Code (terminal), Cline  and Roo (VSCode extensions)
 
 ## Compatibility
 
@@ -35,7 +35,7 @@ Model Context Protocol servers only start when Claude actually needs them.
 
 ### Requirements
 - Python 3.11+ (for MCP Python SDK)
-- Claude Desktop, Claude Code, or Cline
+- Claude Desktop, Claude Code, or Cline/Roo
 - MCP servers you want to use
 
 ### Install
@@ -128,9 +128,9 @@ claude mcp add gateway --scope user \
 claude mcp list
 ```
 
-## Cline MCP server configuration
+## Cline/Roo MCP server configuration
 
-For Cline (VSCode extension), the MCP server gateway configuration goes in:
+For Cline and Roo (VSCode extensions), the MCP server gateway configuration goes in:
 
 **Mac**: `~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`  
 **Windows**: `%APPDATA%/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`  
